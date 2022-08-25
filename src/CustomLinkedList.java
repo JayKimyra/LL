@@ -122,6 +122,7 @@ public class CustomLinkedList<T> implements CustomList<T> {
 
     @Override
     public void sort() {
+        System.out.println("sorted");
     }
 
     public void print(){
