@@ -1,13 +1,11 @@
-import java.util.LinkedList;
-
-public class CustomLinkedList<T> implements CustomList<T> {
+public class CustomLinkedList<T extends Comparable<T>> implements CustomList<T>{
 
     private Node<T> head = null;
     private Node<T> tail = null;
 
     private int size = 0;
 
-    class Node<T> {
+    class Node<T extends Comparable<T>> {
         T data;
         Node<T> next;
         Node<T> prev;
@@ -122,8 +120,40 @@ public class CustomLinkedList<T> implements CustomList<T> {
 
     @Override
     public void sort() {
-        System.out.println("sorted");
+
+        if (size < 2) return;
+        Node<T> mid = head; //
+        CustomLinkedList<T> less = new CustomLinkedList<>();
+        CustomLinkedList<T> more = new CustomLinkedList<>();
+        Node<T> node = head.next;
+        while(node != null){
+            if (node.data.compareTo(mid.data) < 0){
+                less.add(node.data);
+            }
+            else{
+                more.add(node.data);
+            }
+            node = node.next;
+        }
+
+        if(less.size > 1){
+            less.sort();
+        }
+        if(more.size > 1){
+            more.sort();
+        }
+        less.add(mid.data);
+        less.concat(more);
+        head = less.head;
+        tail = less.tail;
     }
+
+    private void concat(CustomLinkedList<T> list) {
+        tail.next = list.head;
+        tail = list.tail;
+        size+=list.size();
+    }
+
 
     public void print(){
         Node<T> t = head;
