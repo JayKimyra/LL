@@ -1,0 +1,130 @@
+[1mdiff --git a/out/production/1/CustomLinkedList$Node.class b/out/production/1/CustomLinkedList$Node.class[m
+[1mindex 60fe8d0..c140e89 100644[m
+Binary files a/out/production/1/CustomLinkedList$Node.class and b/out/production/1/CustomLinkedList$Node.class differ
+[1mdiff --git a/out/production/1/CustomLinkedList.class b/out/production/1/CustomLinkedList.class[m
+[1mindex 4eb0ae9..e7ba0fc 100644[m
+Binary files a/out/production/1/CustomLinkedList.class and b/out/production/1/CustomLinkedList.class differ
+[1mdiff --git a/out/production/1/CustomList.class b/out/production/1/CustomList.class[m
+[1mindex ea760a7..c1a2f5f 100644[m
+Binary files a/out/production/1/CustomList.class and b/out/production/1/CustomList.class differ
+[1mdiff --git a/out/production/1/Main.class b/out/production/1/Main.class[m
+[1mindex 32940bd..54a7c93 100644[m
+Binary files a/out/production/1/Main.class and b/out/production/1/Main.class differ
+[1mdiff --git a/src/CustomLinkedList.java b/src/CustomLinkedList.java[m
+[1mindex 5465ffa..d22fa8f 100644[m
+[1m--- a/src/CustomLinkedList.java[m
+[1m+++ b/src/CustomLinkedList.java[m
+[36m@@ -1,13 +1,11 @@[m
+[31m-import java.util.LinkedList;[m
+[31m-[m
+[31m-public class CustomLinkedList<T> implements CustomList<T> {[m
+[32m+[m[32mpublic class CustomLinkedList<T extends Comparable<T>> implements CustomList<T>{[m
+ [m
+     private Node<T> head = null;[m
+     private Node<T> tail = null;[m
+ [m
+     private int size = 0;[m
+ [m
+[31m-    class Node<T> {[m
+[32m+[m[32m    class Node<T extends Comparable<T>> {[m
+         T data;[m
+         Node<T> next;[m
+         Node<T> prev;[m
+[36m@@ -122,9 +120,41 @@[m [mpublic class CustomLinkedList<T> implements CustomList<T> {[m
+ [m
+     @Override[m
+     public void sort() {[m
+[31m-        System.out.println("sorted");[m
+[32m+[m
+[32m+[m[32m        if (size < 2) return;[m
+[32m+[m[32m        Node<T> mid = head; //[m
+[32m+[m[32m        CustomLinkedList<T> less = new CustomLinkedList<>();[m
+[32m+[m[32m        CustomLinkedList<T> more = new CustomLinkedList<>();[m
+[32m+[m[32m        Node<T> node = head.next;[m
+[32m+[m[32m        while(node != null){[m
+[32m+[m[32m            if (node.data.compareTo(mid.data) < 0){[m
+[32m+[m[32m                less.add(node.data);[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else{[m
+[32m+[m[32m                more.add(node.data);[m
+[32m+[m[32m            }[m
+[32m+[m[32m            node = node.next;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        if(less.size > 1){[m
+[32m+[m[32m            less.sort();[m
+[32m+[m[32m        }[m
+[32m+[m[32m        if(more.size > 1){[m
+[32m+[m[32m            more.sort();[m
+[32m+[m[32m        }[m
+[32m+[m[32m        less.add(mid.data);[m
+[32m+[m[32m        less.concat(more);[m
+[32m+[m[32m        head = less.head;[m
+[32m+[m[32m        tail = less.tail;[m
+     }[m
+ [m
+[32m+[m[32m    private void concat(CustomLinkedList<T> list) {[m
+[32m+[m[32m        tail.next = list.head;[m
+[32m+[m[32m        tail = list.tail;[m
+[32m+[m[32m        size+=list.size();[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m
+     public void print(){[m
+         Node<T> t = head;[m
+         while(t != null){[m
+[1mdiff --git a/src/CustomList.java b/src/CustomList.java[m
+[1mindex b3a488d..99c5b82 100644[m
+[1m--- a/src/CustomList.java[m
+[1m+++ b/src/CustomList.java[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-public interface CustomList<T> {[m
+[32m+[m[32mpublic interface CustomList<T extends Comparable<T>> {[m
+     void add(T el);[m
+     boolean delete(T el);[m
+     void sort();[m
+[1mdiff --git a/src/Main.java b/src/Main.java[m
+[1mindex 38a962c..0d13bad 100644[m
+[1m--- a/src/Main.java[m
+[1m+++ b/src/Main.java[m
+[36m@@ -1,35 +1,9 @@[m
+[32m+[m[32mimport java.util.Arrays;[m
+[32m+[m[32mimport java.util.Collection;[m
+[32m+[m[32mimport java.util.Collections;[m
+[32m+[m[32mimport java.util.LinkedList;[m
+[32m+[m
+ public class Main {[m
+     public static void main(String[] args) {[m
+[31m-        CustomLinkedList<Integer> customList = new CustomLinkedList<>();[m
+[31m-        customList.add(15);[m
+[31m-        customList.add(16);[m
+[31m-        customList.add(17);[m
+[31m-        customList.print();[m
+[31m-        System.out.println(customList.size());[m
+[31m-[m
+[31m-        customList.add(15);[m
+[31m-        customList.add(16);[m
+[31m-        customList.add(17);[m
+[31m-[m
+[31m-        customList.add(null);[m
+[31m-        customList.print();[m
+[31m-        System.out.println(customList.size());[m
+[31m-[m
+[31m-        customList.removeFromTail(15);[m
+[31m-[m
+[31m-[m
+[31m-        customList.print();[m
+[31m-        System.out.println(customList.size());[m
+[31m-[m
+[31m-        customList.delete(17);[m
+[31m-[m
+[31m-[m
+[31m-        customList.print();[m
+[31m-        System.out.println(customList.size());[m
+[31m-        customList.removeFromTail(null);[m
+[31m-[m
+[31m-[m
+[31m-        customList.print();[m
+[31m-        System.out.println(customList.size());[m
+     }[m
+ }[m
